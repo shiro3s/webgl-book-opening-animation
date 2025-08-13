@@ -6,13 +6,15 @@ import {
 	MeshStandardMaterial,
 	Skeleton,
 	SkinnedMesh,
+	SRGBColorSpace,
+	TextureLoader,
 	Uint16BufferAttribute,
 	Vector3,
 } from "three";
 
 const pageWidth = 1.28;
 const pageHeight = 1.71;
-const pageDepth = 0.005;
+const pageDepth = 0.003;
 const pageSegments = 30;
 
 const segmentWidth = pageWidth / pageSegments;
@@ -58,7 +60,7 @@ const getPageGeometry = () => {
 	};
 };
 
-const createPage = (index: number) => {
+const createPage = (index: number, materials: MeshStandardMaterial[]) => {
 	const bones: Bone[] = [];
 
 	for (let i = 0; i <= pageSegments; i += 1) {
@@ -75,8 +77,7 @@ const createPage = (index: number) => {
 		new MeshStandardMaterial({ color: "#111" }),
 		new MeshStandardMaterial({ color: "#fff" }),
 		new MeshStandardMaterial({ color: "#fff" }),
-		new MeshStandardMaterial({ color: "#fff" }),
-		new MeshStandardMaterial({ color: "#fff" }),
+		...materials
 	];
 
 	const { pageGeometry } = getPageGeometry();
@@ -98,16 +99,41 @@ const createPage = (index: number) => {
 	return mesh;
 };
 
-export const createBook = () => {
+export const createBook = async () => {
   const book = new Group();
   const pages = Array.from({length: 30})
 
+	const textureLoader = new TextureLoader()
+	const frontTexture = await textureLoader.loadAsync("./front-cover.png");
+	const backTexture = await textureLoader.loadAsync("./back-cover.png");
+
+	frontTexture.colorSpace = SRGBColorSpace
+	backTexture.colorSpace = SRGBColorSpace
+
+	const coverMaterial = [
+		new MeshStandardMaterial({
+			color: "#fff",
+			map: frontTexture,
+			roughness: 0.1,
+			emissive: "#FFA500",
+			emissiveIntensity: 0
+		}),
+		new MeshStandardMaterial({
+			color: "#fff",
+			map: backTexture,
+			roughness: 0.1,
+			emissive: "#FFA500",
+			emissiveIntensity: 0
+		}),
+	]
+
   for (let i = 0; i < pages.length; i+=1) {
-    const page = createPage(i);
+    const page = createPage(i, coverMaterial);
     page.position.z = -i * pageDepth;
     book.add(page)
   }
   book.rotation.y = -Math.PI / 2;
+	book.name = "book";
   
   return {
     book

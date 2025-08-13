@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export const getViewerState = (el: HTMLCanvasElement) => {
@@ -17,12 +17,20 @@ export const getViewerState = (el: HTMLCanvasElement) => {
   // scene
 	const scene = new Scene()
 
+  // controller
   const controller = new OrbitControls(camera, renderer.domElement)
+
+  // raycaster
+  const raycaster = new Raycaster();
+  // pointer
+  const pointer = new Vector2()
 
 	return {
 		camera,
 		renderer,
 		scene,
-    controller
+    controller,
+    raycaster,
+    pointer
 	};
 };
