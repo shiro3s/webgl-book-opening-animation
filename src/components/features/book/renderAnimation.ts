@@ -7,16 +7,20 @@ export const renderAnimation = ({
 	camera,
 	controller,
 	raycaster,
+	pointer
 }: State) => {
 	const animate = () => {
-		if (!renderer || !scene || !camera || !controller || !raycaster) return;
+		if (!renderer || !scene || !camera || !controller || !raycaster || !pointer) return;
 
+		
 		const book = scene.children.find((model) => {
 			return model.name === "book";
 		});
+
 		if (book) {
 			const intersect = raycaster.intersectObject(book);
-			if (intersect.length) animateBook({ book });
+			if (intersect.length) 
+				animateBook({ book });
 		}
 
 		controller.update();

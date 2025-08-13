@@ -9,7 +9,6 @@ import { State } from "./type";
 
 export const useBook = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animateRef = useRef(false);
 	const stateRef = useRef<State>({
 		camera: null,
 		renderer: null,
@@ -29,6 +28,7 @@ export const useBook = () => {
 				const models = [book, directionalLight, ambientLight];
 				setScene({ ...stateRef.current, models });
 			});
+			
 			const { handleMouseMove, handleClick } = getEventHandler(
 				stateRef.current,
 			);

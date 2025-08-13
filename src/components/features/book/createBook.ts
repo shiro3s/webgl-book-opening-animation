@@ -101,7 +101,7 @@ const createPage = (index: number, materials: MeshStandardMaterial[]) => {
 
 export const createBook = async () => {
   const book = new Group();
-  const pages = Array.from({length: 30})
+  const pages = Array.from({length: 10})
 
 	const textureLoader = new TextureLoader()
 	const frontTexture = await textureLoader.loadAsync("./front-cover.png");

@@ -22,6 +22,7 @@ export const getViewerState = (el: HTMLCanvasElement) => {
 
   // raycaster
   const raycaster = new Raycaster();
+
   // pointer
   const pointer = new Vector2()
 

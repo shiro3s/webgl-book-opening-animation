@@ -7,8 +7,8 @@ type Args = {
 } & State;
 
 export const setScene = (args: Args) => {
-	for (let i = 0; i < args.models.length; i += 1) {
-		const model = args.models[i];
-		args.scene?.add(model);
-	}
+	args.scene?.clear()
+
+	const models = new Set(args.models);
+	for (const model of models) args.scene?.add(model);
 };
