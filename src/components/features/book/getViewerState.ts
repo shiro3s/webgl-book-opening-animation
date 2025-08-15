@@ -1,4 +1,11 @@
-import { PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from "three";
+import {
+	Color,
+	PerspectiveCamera,
+	Raycaster,
+	Scene,
+	Vector2,
+	WebGLRenderer,
+} from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export const getViewerState = (el: HTMLCanvasElement) => {
@@ -7,31 +14,33 @@ export const getViewerState = (el: HTMLCanvasElement) => {
 
 	// camera
 	const camera = new PerspectiveCamera(75, aspect, 0.1, 1000);
-  camera.position.set(-2, 0, 0)
+	camera.position.set(-2, 0, 0);
 
 	// renderer
 	const renderer = new WebGLRenderer({ antialias: true, canvas: el });
-	renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.shadowMap.enabled = true;
+	renderer.setPixelRatio(2);
+	renderer.setSize(clientWidth, clientHeight);
+	renderer.shadowMap.enabled = true;
 
-  // scene
-	const scene = new Scene()
+	// scene
+	const scene = new Scene();
+	scene.background = new Color("#ffffff");
 
-  // controller
-  const controller = new OrbitControls(camera, renderer.domElement)
+	// controller
+	const controller = new OrbitControls(camera, renderer.domElement);
 
-  // raycaster
-  const raycaster = new Raycaster();
+	// raycaster
+	const raycaster = new Raycaster();
 
-  // pointer
-  const pointer = new Vector2()
+	// pointer
+	const pointer = new Vector2();
 
 	return {
 		camera,
 		renderer,
 		scene,
-    controller,
-    raycaster,
-    pointer
+		controller,
+		raycaster,
+		pointer,
 	};
 };

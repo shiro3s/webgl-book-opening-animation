@@ -6,6 +6,7 @@ export const getEventHandler = ({
 	pointer,
 	raycaster,
 	camera,
+	renderer,
 }: Args) => {
 	const handleMouseMove = (e: MouseEvent) => {
 		if (!pointer || !camera) return;
@@ -19,8 +20,18 @@ export const getEventHandler = ({
 		raycaster.setFromCamera(pointer, camera);
 	};
 
+	const handleResize = () => {
+		if (!renderer || !camera) return;
+		const { innerHeight, innerWidth } = window;
+
+		camera.aspect = innerWidth / innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(innerWidth, innerHeight);
+	};
+
 	return {
 		handleMouseMove,
 		handleClick,
+		handleResize,
 	};
 };

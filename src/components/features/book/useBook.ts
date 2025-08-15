@@ -28,8 +28,8 @@ export const useBook = () => {
 				const models = [book, directionalLight, ambientLight];
 				setScene({ ...stateRef.current, models });
 			});
-			
-			const { handleMouseMove, handleClick } = getEventHandler(
+
+			const { handleMouseMove, handleClick, handleResize } = getEventHandler(
 				stateRef.current,
 			);
 
@@ -39,10 +39,12 @@ export const useBook = () => {
 
 			window.addEventListener("mousemove", handleMouseMove);
 			window.addEventListener("click", handleClick);
+			window.addEventListener("resize", handleResize);
 
 			return () => {
 				window.removeEventListener("mousemove", handleMouseMove);
 				window.removeEventListener("click", handleClick);
+				window.removeEventListener("resize", handleResize);
 			};
 		}
 	}, []);
