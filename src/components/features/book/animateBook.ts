@@ -4,17 +4,14 @@ import { sleep } from "@/utils/sleep";
 import {
 	insideCurveStrength,
 	outsideCurveStrength,
-	pageSegments,
-	scale,
 	turningCurveStrength,
 } from "./constants";
 
 type Args = {
-	delta: number
 	book?: Group<Object3DEventMap> | Object3D<Object3DEventMap>;
 };
 
-export const animateBook = ({ delta, book }: Args) => {
+export const animateBook = ({ book }: Args) => {
 	if (!book) return;
 
 	const pages = book.children;
@@ -28,9 +25,6 @@ export const animateBook = ({ delta, book }: Args) => {
 			const bones = page.userData.bones;
 
 			if (i < halfPageSize) page.userData.opened = true;
-			
-			let turningTime = Math.min(400, delta) / 400
-			turningTime = Math.sin(2 * Math.PI)
 
 			const targetRotation = page.userData.opened ? -Math.PI / 2 : Math.PI / 2;
 
@@ -45,22 +39,17 @@ export const animateBook = ({ delta, book }: Args) => {
 
 				// ページ全体
 				const turningIntensity =
-					Math.sin(j * Math.PI * (1 / bones.length)) * turningTime;
+					Math.sin(j * Math.PI * bones.length);
 
 				const rotationAngle =
 					insideCurveStrength * insideCurveIntensity * targetRotation -
 					outsideCurveStrength * outsideCurveIntensity * targetRotation +
 					turningCurveStrength * turningIntensity * targetRotation;
 
-				// // 端に近い骨ほど回転を弱くする（丸まり防止）
-				// const edgeFactor = 1 - Math.abs(j / bones.length - 0.5) * 1.5; // 中央1.0 → 端0.25
-				// rotationAngle *= edgeFactor;
-
-				// if (i < halfPageSize)
-					bone.rotation.y = MathUtils.lerp(bone.rotation.y, rotationAngle, 0.1);
+				bone.rotation.y = MathUtils.lerp(bone.rotation.y, rotationAngle, 0.1);
 			}
 		});
 	}
-	
-	book.rotation.y = MathUtils.lerp(book.rotation.y, -3.1, 0.1);
+
+	book.rotation.y = MathUtils.lerp(book.rotation.y, -Math.PI, 0.1)
 };

@@ -7,24 +7,19 @@ export const renderAnimation = ({
 	camera,
 	controller,
 	raycaster,
-	pointer
+	pointer,
 }: State) => {
-	let lastTime = 0;
+	const animate = () => {
+		if (!renderer || !scene || !camera || !controller || !raycaster || !pointer)
+			return;
 
-	const animate = (time: number) => {
-		if (!renderer || !scene || !camera || !controller || !raycaster || !pointer) return;
-
-		
 		const book = scene.children.find((model) => {
 			return model.name === "book";
 		});
 
 		if (book) {
-			const delta = (time - lastTime) / 1000;
-			lastTime = time;
-
 			const intersect = raycaster.intersectObject(book);
-			if (intersect.length) animateBook({ delta, book });
+			if (intersect.length) animateBook({ book });
 		}
 
 		controller.update();
