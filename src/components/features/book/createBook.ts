@@ -12,10 +12,7 @@ import {
 	Vector3,
 } from "three";
 
-const pageWidth = 1.28;
-const pageHeight = 1.71;
-const pageDepth = 0.003;
-const pageSegments = 30;
+import { pageDepth, pageHeight, pageSegments, pageWidth } from "./constants";
 
 const segmentWidth = pageWidth / pageSegments;
 
@@ -66,6 +63,7 @@ const createPage = (index: number, materials: MeshStandardMaterial[]) => {
 	for (let i = 0; i <= pageSegments; i += 1) {
 		const bone = new Bone();
 		bone.position.x = i === 0 ? 0 : segmentWidth;
+
 		if (i > 0) bones[i - 1].add(bone);
 		bones.push(bone);
 	}
@@ -77,7 +75,7 @@ const createPage = (index: number, materials: MeshStandardMaterial[]) => {
 		new MeshStandardMaterial({ color: "#111" }),
 		new MeshStandardMaterial({ color: "#fff" }),
 		new MeshStandardMaterial({ color: "#fff" }),
-		...materials
+		...materials,
 	];
 
 	const { pageGeometry } = getPageGeometry();
@@ -93,22 +91,24 @@ const createPage = (index: number, materials: MeshStandardMaterial[]) => {
 		index,
 		opened: false,
 		bones,
+		skelton,
 		emissiveTargets: [4, 5],
+		turnedAt: 0
 	};
 
 	return mesh;
 };
 
 export const createBook = async () => {
-  const book = new Group();
-  const pages = Array.from({length: 10})
+	const book = new Group();
+	const pages = Array.from({ length: 10 });
 
-	const textureLoader = new TextureLoader()
+	const textureLoader = new TextureLoader();
 	const frontTexture = await textureLoader.loadAsync("./front-cover.png");
 	const backTexture = await textureLoader.loadAsync("./back-cover.png");
 
-	frontTexture.colorSpace = SRGBColorSpace
-	backTexture.colorSpace = SRGBColorSpace
+	frontTexture.colorSpace = SRGBColorSpace;
+	backTexture.colorSpace = SRGBColorSpace;
 
 	const coverMaterial = [
 		new MeshStandardMaterial({
@@ -116,26 +116,26 @@ export const createBook = async () => {
 			map: frontTexture,
 			roughness: 0.1,
 			emissive: "#FFA500",
-			emissiveIntensity: 0
+			emissiveIntensity: 0,
 		}),
 		new MeshStandardMaterial({
 			color: "#fff",
 			map: backTexture,
 			roughness: 0.1,
 			emissive: "#FFA500",
-			emissiveIntensity: 0
+			emissiveIntensity: 0,
 		}),
-	]
+	];
 
-  for (let i = 0; i < pages.length; i+=1) {
-    const page = createPage(i, coverMaterial);
-    page.position.z = -i * pageDepth;
-    book.add(page)
-  }
-  book.rotation.y = -Math.PI / 2;
+	for (let i = 0; i < pages.length; i += 1) {
+		const page = createPage(i, coverMaterial);
+		page.position.z = -i * pageDepth;
+		book.add(page);
+	}
+	book.rotation.y = -Math.PI / 2;
 	book.name = "book";
-  
-  return {
-    book
-  }
-}
+
+	return {
+		book,
+	};
+};

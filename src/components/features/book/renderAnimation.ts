@@ -9,7 +9,9 @@ export const renderAnimation = ({
 	raycaster,
 	pointer
 }: State) => {
-	const animate = () => {
+	let lastTime = 0;
+
+	const animate = (time: number) => {
 		if (!renderer || !scene || !camera || !controller || !raycaster || !pointer) return;
 
 		
@@ -18,9 +20,11 @@ export const renderAnimation = ({
 		});
 
 		if (book) {
+			const delta = (time - lastTime) / 1000;
+			lastTime = time;
+
 			const intersect = raycaster.intersectObject(book);
-			if (intersect.length) 
-				animateBook({ book });
+			if (intersect.length) animateBook({ delta, book });
 		}
 
 		controller.update();
